@@ -1,20 +1,19 @@
 #encoding=utf-8
 import os,sys
 
-#abspath = os.path.dirname(__file__)
-#sys.path.append(abspath)
-# os.chdir(abspath)
+abspath = os.path.dirname(__file__)
+sys.path.append(abspath)
+os.chdir(abspath)
 reload(sys)
 sys.setdefaultencoding('utf-8')
 import web
 import datetime
 import simplejson
 
-from peewee import *
+from db.models import Task
 
 cur_file_dir = os.path.split(os.path.realpath(__file__))[0]
 
-db = MySQLDatabase(host = '127.0.0.1', user = 'root', passwd = 'root', database = 'do_list')
 
 TEMPLATE_PATH = cur_file_dir + '/templates/'
 
@@ -43,19 +42,6 @@ class Task_create:
 		task.save()
 		web.seeother('/')
 
-
-class Util_createTable:
-	def GET(self):
-		db.connect()
-		db.create_tables([Task])
-
-class BaseModel(Model):
-	class Meta:
-		database = db
-
-class Task(BaseModel):
-	content = CharField()
-	datetime = DateTimeField()
 
 
 if __name__ == '__main__':
